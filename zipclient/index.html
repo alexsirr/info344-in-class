@@ -4,14 +4,14 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
     <body>
-         Name: <input type="text" id="name"><br>
-         <button id="sub">Submit Name</button><br>
-
-        <div id="serv-name"></div><br>
-        <div id="serv-alloc"></div>
+        City: <input type="text" id="city"><br>
+        State:
+        <select id="state"></select><br>
+        Zip:
+        <select id="zip"></select><br>
 
         <script>
-
+            /*
             function getMem() {
                 $.get("http://localhost:4000/stats", function(data){
                     $("#serv-alloc").text("Server alloc is: " + data.Alloc)
@@ -25,7 +25,30 @@
                 })
             })    
             var t=setInterval(getMem,1000);
-        
+            */
+            $("#city").on("blur",function(){
+                var name = $("#city").val()
+                $.get("http://localhost:4000/zips/" + name, function(data) {
+                    var states = new Set()
+                    var zips = new Set()
+                    data.forEach(function(e){
+                        if (!states.has(e.State)) {
+                            states.add(e.State)
+                            $('#state').append($('<option>', {
+                                value: e.State,
+                                text: e.State
+                            }));
+                        }
+                        if (!zips.has(e.Code)) {
+                            zips.add(e.Code)
+                            $('#zip').append($('<option>', {
+                                value: e.Code,
+                                text: e.Code
+                            }));
+                        }
+                    })
+                })
+            })    
         </script>
     </body>
 </html>

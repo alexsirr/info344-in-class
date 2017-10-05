@@ -1,13 +1,18 @@
 package main
 
-import "fmt"
-import "net/http"
-import "log"
-import "os"
-import "runtime"
-import "encoding/json"
-import "strings"
-import "github.com/alexsirr/info344-in-class/zipsvr/models"
+import (
+"fmt"
+"net/http"
+"log"
+"os"
+"runtime"
+"encoding/json"
+"strings"
+"github.com/alexsirr/info344-in-class/zipsvr/models"
+"github.com/alexsirr/info344-in-class/zipsvr/handlers"
+)
+
+const zipPath = "/zips/"
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
     name := r.URL.Query().Get("name")
@@ -46,6 +51,13 @@ func main() {
     mux := http.NewServeMux()
     mux.HandleFunc("/hello", helloHandler)
     mux.HandleFunc("/stats", memoryHandler)
+
+    cityHandler := &handlers.CityHandler{
+        Index: cityIndex,
+        PathPrefix: zipPath,
+    }
+    mux.Handle(zipPath, cityHandler)
+
     fmt.Printf("server is listening at http://%s\n", addr)
     log.Fatal(http.ListenAndServe(addr, mux))
 }
