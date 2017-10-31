@@ -9,7 +9,7 @@ import (
 
 func client(index int, c *Cache) {
 	for {
-		time.Sleep(time.Millisecond * time.Duration(rand.Intn(10)))
+		time.Sleep(time.Millisecond * time.Duration(rand.Intn(50)))
 		key := strconv.Itoa(rand.Intn(10))
 		value := key + " value"
 
@@ -25,4 +25,8 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	c := NewCache()
 
+	for i := 0; i < 10; i++ {
+		go client(i, c)
+	}
+	time.Sleep(time.Minute)
 }
